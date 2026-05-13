@@ -58,6 +58,7 @@ Before you begin, ensure you have:
 ### For XAMPP Users
 
 Ensure PostgreSQL is running:
+
 ```bash
 # macOS (Homebrew)
 brew services start postgresql
@@ -91,6 +92,7 @@ composer run-script setup
 ```
 
 This runs:
+
 - Composer dependency installation
 - Application key generation
 - Database migrations
@@ -132,6 +134,7 @@ composer run-script dev
 ```
 
 This command:
+
 - Starts Laravel development server on `http://127.0.0.1:8000`
 - Monitors queue jobs
 - Tails application logs
@@ -233,36 +236,43 @@ storage/
 ## ✨ Key Features
 
 ### Organizations & Multi-Tenancy
+
 - Create and manage multiple organizations
 - Isolated data per organization
 - Subscription management
 
 ### Hotels & Rooms
+
 - Multi-hotel support per organization
 - Room types and classifications
 - Room status tracking
 
 ### Bookings
+
 - Complete booking lifecycle (pending → confirmed → checked-in → checked-out)
 - Multiple room bookings per reservation
 - Price calculations and discounts
 
 ### Guests
+
 - Guest profile management
 - Check-in/check-out tracking
 - Guest history
 
 ### Payments & Invoicing
+
 - Multiple payment methods
 - Partial and full payment tracking
 - Invoice generation and management
 
 ### Access Control
+
 - Role-based permissions
 - Hotel-level access control
 - Super admin override capabilities
 
 ### Audit & Compliance
+
 - Complete action audit trail
 - User activity logging
 - Compliance reporting
@@ -385,6 +395,7 @@ php artisan db:seed
 ```
 
 This creates:
+
 - Sample organizations
 - Demo hotels and rooms
 - Test users with various roles
