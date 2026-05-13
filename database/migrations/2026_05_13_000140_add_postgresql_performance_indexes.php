@@ -7,6 +7,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::connection()->getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::statement('CREATE INDEX organizations_metadata_gin_idx ON organizations USING GIN (metadata)');
         DB::statement('CREATE INDEX users_metadata_gin_idx ON users USING GIN (metadata)');
         DB::statement('CREATE INDEX hotels_metadata_gin_idx ON hotels USING GIN (metadata)');
@@ -22,6 +26,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (DB::connection()->getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::statement('DROP INDEX IF EXISTS audit_logs_recent_idx');
         DB::statement('DROP INDEX IF EXISTS notifications_unread_user_idx');
         DB::statement('DROP INDEX IF EXISTS bookings_active_stay_idx');

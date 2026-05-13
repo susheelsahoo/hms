@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Support\Context\HotelContext;
+use App\Support\Context\TenantContext;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->scoped(TenantContext::class);
+        $this->app->scoped(HotelContext::class);
     }
 
     /**
