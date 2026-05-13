@@ -1,2 +1,23 @@
 are you using modular monolith 
 if not please correct Organization and hotel modules
+
+
+User Management
+
+Create Hotel Admin users
+Create Hotel Manager users
+Assign users to hotels via user_hotels
+Room Management
+
+Room types
+Rooms
+Room statuses
+Booking Module
+
+Create booking
+Check availability
+Assign rooms
+Check-in/check-out
+Payments + Invoices
+
+Notifications + Audit Logs
