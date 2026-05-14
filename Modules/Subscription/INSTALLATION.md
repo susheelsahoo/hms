@@ -35,6 +35,7 @@ php artisan migrate
 ```
 
 This will run all subscription module migrations in order:
+
 - `2026_05_14_000000_create_subscription_plans_table`
 - `2026_05_14_000010_create_subscriptions_table`
 - `2026_05_14_000020_create_subscription_usages_table`
@@ -49,6 +50,7 @@ php artisan db:seed --class="Modules\\Subscription\\Database\\Seeders\\Subscript
 ```
 
 This seeds four default plans:
+
 - **Trial**: 14-day free trial (1 hotel, 5 staff, 50 rooms, 500 bookings)
 - **Basic**: $29.99/month (1 hotel, 10 staff, 100 rooms, 2000 bookings)
 - **Professional**: $79.99/month (5 hotels, 50 staff, 1000 rooms, 10000 bookings)
@@ -157,22 +159,22 @@ php artisan queue:work --daemon --tries=3 --timeout=60
 return [
     // Grace period after payment is due (days)
     'grace_period_days' => 7,
-    
+
     // Days before trial end to send reminder
     'trial_notification_days' => 3,
-    
+
     // Days until invoice is due
     'invoice_due_days' => 14,
-    
+
     // Tax rate for invoice calculation
     'tax_rate' => 0.10, // 10%
-    
+
     // Payment gateway enablement
     'payment_gateways' => [
         'stripe' => true,
         'razorpay' => false,
     ],
-    
+
     // Email notification settings
     'email_notifications' => [
         'send_welcome_email' => true,
@@ -180,7 +182,7 @@ return [
         'send_trial_ending_reminder' => true,
         'send_invoice_email' => true,
     ],
-    
+
     // Caching
     'cache' => [
         'enabled' => true,

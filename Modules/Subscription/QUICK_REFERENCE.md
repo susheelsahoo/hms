@@ -101,6 +101,7 @@ Modules/Subscription/
 ## Quick Commands
 
 ### Installation
+
 ```bash
 # Register provider in config/app.php
 
@@ -118,6 +119,7 @@ php artisan queue:work
 ```
 
 ### Development
+
 ```bash
 # Run tests
 php artisan test Modules/Subscription/Tests
@@ -133,23 +135,24 @@ php artisan tinker
 
 ## API Endpoints Summary
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | `/api/v1/subscription-plans` | List all plans |
-| GET | `/api/v1/subscription-plans/{id}` | Get plan |
-| GET | `/api/v1/subscription-plans/slug/{slug}` | Get by slug |
-| POST | `/api/v1/subscription-plans/compare` | Compare plans |
-| GET | `/api/v1/subscriptions` | Get org subscription |
-| POST | `/api/v1/subscriptions` | Create subscription |
-| POST | `/api/v1/subscriptions/upgrade` | Upgrade plan |
-| POST | `/api/v1/subscriptions/downgrade` | Downgrade plan |
-| POST | `/api/v1/subscriptions/cancel` | Cancel subscription |
-| GET | `/api/v1/subscriptions/usage` | Get usage stats |
-| GET\|POST | `/api/v1/subscription-invoices` | Invoices |
+| Method    | Endpoint                                 | Purpose              |
+| --------- | ---------------------------------------- | -------------------- |
+| GET       | `/api/v1/subscription-plans`             | List all plans       |
+| GET       | `/api/v1/subscription-plans/{id}`        | Get plan             |
+| GET       | `/api/v1/subscription-plans/slug/{slug}` | Get by slug          |
+| POST      | `/api/v1/subscription-plans/compare`     | Compare plans        |
+| GET       | `/api/v1/subscriptions`                  | Get org subscription |
+| POST      | `/api/v1/subscriptions`                  | Create subscription  |
+| POST      | `/api/v1/subscriptions/upgrade`          | Upgrade plan         |
+| POST      | `/api/v1/subscriptions/downgrade`        | Downgrade plan       |
+| POST      | `/api/v1/subscriptions/cancel`           | Cancel subscription  |
+| GET       | `/api/v1/subscriptions/usage`            | Get usage stats      |
+| GET\|POST | `/api/v1/subscription-invoices`          | Invoices             |
 
 ## Key Service Methods
 
 ### SubscriptionService
+
 - `create(CreateSubscriptionDTO)` - Create new subscription
 - `upgrade(UpgradeSubscriptionDTO, userId)` - Upgrade plan
 - `downgrade(UpgradeSubscriptionDTO, userId)` - Downgrade plan
@@ -165,12 +168,14 @@ php artisan tinker
 - `validateTransition(subscription, targetStatus)` - Validate state
 
 ### InvoiceService
+
 - `generateInvoice(subscription)` - Generate invoice
 - `generateProratedInvoice(subscription, newPlan, fromDate, toDate)` - Prorate
 - `calculateTax(amount)` - Calculate tax
 - `calculateProration(amount, fromDate, toDate, cycleStart, cycleEnd)` - Prorating calc
 
 ### LimitValidator
+
 - `validateAndTrackHotel(organizationId)` - Validate hotel limit
 - `validateAndTrackStaff(organizationId)` - Validate staff limit
 - `validateAndTrackRooms(organizationId)` - Validate room limit
@@ -181,6 +186,7 @@ php artisan tinker
 ## Model Status Flows
 
 ### Subscription Statuses
+
 ```
 TRIAL ---> ACTIVE ---> PAST_DUE ---> EXPIRED
               |         |
@@ -193,6 +199,7 @@ TRIAL ---> ACTIVE ---> PAST_DUE ---> EXPIRED
 ```
 
 ### Invoice Statuses
+
 ```
 PENDING ---> PAID
    |
@@ -229,22 +236,26 @@ REFUNDED
 ## Important Notes
 
 ### Multi-Tenant Safety
+
 - All queries filtered by `organization_id`
 - Policies check tenant isolation
 - Subscriptions are 1:1 with Organization
 
 ### Database Constraints
+
 - Index names limited to 64 characters (MySQL)
 - Uses table prefixes: `org_`, `usr_`, `sub_`, `inv_`, etc.
 - Soft deletes for historical data retention
 
 ### Performance Considerations
+
 - Subscription data cached (1 hour)
 - Eager load relationships
 - Queue jobs for email/processing
 - Database indexes on frequent queries
 
 ### Security Features
+
 - Policy authorization on all operations
 - Audit trail in subscription_histories
 - Transaction wrapping for consistency
@@ -253,6 +264,7 @@ REFUNDED
 ## Common Patterns
 
 ### Protecting Routes
+
 ```php
 Route::middleware('subscription.active')->group(function () {
     Route::get('/dashboard', 'DashboardController');
@@ -260,6 +272,7 @@ Route::middleware('subscription.active')->group(function () {
 ```
 
 ### Checking Feature
+
 ```php
 if ($subscription->hasFeature('advanced_reporting')) {
     // Show feature
@@ -267,6 +280,7 @@ if ($subscription->hasFeature('advanced_reporting')) {
 ```
 
 ### Validating Limits
+
 ```php
 try {
     $limitValidator->validateAndTrackHotel($orgId);
@@ -276,6 +290,7 @@ try {
 ```
 
 ### Creating Invoice
+
 ```php
 $invoice = $invoiceService->generateInvoice($subscription);
 SendInvoiceEmail::dispatch($invoice);
@@ -284,21 +299,25 @@ SendInvoiceEmail::dispatch($invoice);
 ## Troubleshooting
 
 ### Subscription not found
+
 - Check organization_id
 - Verify subscription exists
 - Check soft delete flag
 
 ### Limit validation failing
+
 - Check current usage
 - Verify plan limits
 - Review subscription status
 
 ### Queue jobs not processing
+
 - Start queue worker: `php artisan queue:work`
 - Check failed jobs: `php artisan queue:failed`
 - Verify Redis/database connection
 
 ### Cache issues
+
 - Clear: `php artisan cache:clear`
 - Verify Redis connection
 - Check TTL settings
@@ -315,6 +334,7 @@ SendInvoiceEmail::dispatch($invoice);
 8. Deploy to production
 
 For detailed information, see:
+
 - [README.md](./README.md) - Full documentation
 - [INSTALLATION.md](./INSTALLATION.md) - Setup guide
 - [EXAMPLES.md](./EXAMPLES.md) - Code examples
