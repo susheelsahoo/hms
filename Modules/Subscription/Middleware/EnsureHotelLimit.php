@@ -1,0 +1,23 @@
+<?php
+
+namespace Modules\Subscription\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Modules\Subscription\Services\LimitValidator;
+
+class EnsureHotelLimit
+{
+    public function __construct(private LimitValidator $validator) {}
+
+    public function handle(Request $request, Closure $next)
+    {
+        $organizationId = $request->user()?->organization_id;
+
+        if ($organizationId && $request->route()->getName() === 'hotels.create') {
+            $this->validator->validateAndTrackHotel($organizationId);
+        }
+
+        return $next($request);
+    }
+}
