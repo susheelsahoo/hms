@@ -22,6 +22,8 @@ body {
 }
 
 .hms-nav-link {
+    background: transparent;
+    border: 0;
     color: rgba(255, 255, 255, 0.72);
     display: block;
     border-radius: 0.375rem;
@@ -38,6 +40,23 @@ body {
 .hms-nav-link.disabled {
     color: rgba(255, 255, 255, 0.36);
     pointer-events: none;
+}
+
+.hms-nav-toggle {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hms-nav-toggle-icon {
+    display: inline-block;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.hms-nav-toggle[aria-expanded='true'] .hms-nav-toggle-icon {
+    transform: rotate(90deg);
 }
 
 @media (min-width: 992px) {

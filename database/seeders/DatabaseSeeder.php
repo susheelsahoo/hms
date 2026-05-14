@@ -17,39 +17,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [
-            Role::SUPER_ADMIN => 'Super Admin',
-            Role::HOTEL_ADMIN => 'Hotel Admin',
-            Role::HOTEL_MANAGER => 'Hotel Manager',
-        ];
+        $this->call([
+            RoleSeeder::class,
+            PermissionSeeder::class,
+        ]);
 
-        $roleIds = [];
-
-        foreach ($roles as $slug => $name) {
-            $role = Role::query()->updateOrCreate(
-                ['slug' => $slug],
-                ['name' => $name, 'description' => "{$name} role"]
-            );
-
-            $roleIds[$slug] = $role->id;
-        }
+        $roles = Role::query()
+            ->whereIn('slug', [
+                Role::SUPER_ADMIN,
+                Role::HOTEL_ADMIN,
+                Role::HOTEL_MANAGER,
+            ])
+            ->pluck('id', 'slug');
 
         $users = [
             [
                 'email' => 'admin@hms.test',
-                'role_id' => $roleIds[Role::SUPER_ADMIN],
+                'role_id' => $roles[Role::SUPER_ADMIN],
                 'first_name' => 'Super',
                 'last_name' => 'Admin',
             ],
             [
                 'email' => 'hoteladmin@hms.test',
-                'role_id' => $roleIds[Role::HOTEL_ADMIN],
+                'role_id' => $roles[Role::HOTEL_ADMIN],
                 'first_name' => 'Hotel',
                 'last_name' => 'Admin',
             ],
             [
                 'email' => 'manager@hms.test',
-                'role_id' => $roleIds[Role::HOTEL_MANAGER],
+                'role_id' => $roles[Role::HOTEL_MANAGER],
                 'first_name' => 'Hotel',
                 'last_name' => 'Manager',
             ],

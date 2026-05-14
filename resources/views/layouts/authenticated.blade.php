@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('body')
+    @php
+        $isUserManagementOpen = request()->routeIs('user-management.*');
+    @endphp
+
     <div class="hms-shell">
         <aside class="hms-sidebar bg-dark text-white">
             <div class="px-3 py-4 border-bottom border-secondary">
@@ -19,8 +23,30 @@
                     <a class="hms-nav-link {{ request()->routeIs('super-admin.organizations.*') ? 'active' : '' }}" href="{{ route('super-admin.organizations.index') }}">
                         Organizations
                     </a>
-                    <a class="hms-nav-link {{ request()->routeIs('super-admin.organizations.hotels.*') ? 'active' : '' }}" href="{{ route('super-admin.organizations.index') }}">Hotels</a>
-                    <a class="hms-nav-link disabled" href="#">Users</a>
+                    <button
+                        class="hms-nav-link hms-nav-toggle w-100 text-start mt-4 {{ $isUserManagementOpen ? 'active' : '' }}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#userManagementMenu"
+                        aria-expanded="{{ $isUserManagementOpen ? 'true' : 'false' }}"
+                        aria-controls="userManagementMenu"
+                    >
+                        <span>User Management</span>
+                        <span class="hms-nav-toggle-icon" aria-hidden="true">›</span>
+                    </button>
+                    <div class="collapse {{ $isUserManagementOpen ? 'show' : '' }}" id="userManagementMenu">
+                        <div class="ps-3 mt-1">
+                            <a class="hms-nav-link {{ request()->routeIs('user-management.permissions.*') ? 'active' : '' }}" href="{{ route('user-management.permissions.index') }}">
+                                Permissions
+                            </a>
+                            <a class="hms-nav-link {{ request()->routeIs('user-management.roles.*') ? 'active' : '' }}" href="{{ route('user-management.roles.index') }}">
+                                Roles
+                            </a>
+                            <a class="hms-nav-link {{ request()->routeIs('user-management.users.*') ? 'active' : '' }}" href="{{ route('user-management.users.index') }}">
+                                Users
+                            </a>
+                        </div>
+                    </div>
                     <a class="hms-nav-link disabled" href="#">Subscriptions</a>
                     <a class="hms-nav-link disabled" href="#">Global Analytics</a>
                 @endif
@@ -79,6 +105,24 @@
             <a class="hms-nav-link {{ request()->routeIs('dashboard', '*.dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
             @if (auth()->user()->isSuperAdmin())
                 <a class="hms-nav-link {{ request()->routeIs('super-admin.organizations.*') ? 'active' : '' }}" href="{{ route('super-admin.organizations.index') }}">Organizations</a>
+                <button
+                    class="hms-nav-link hms-nav-toggle w-100 text-start mt-2 {{ $isUserManagementOpen ? 'active' : '' }}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mobileUserManagementMenu"
+                    aria-expanded="{{ $isUserManagementOpen ? 'true' : 'false' }}"
+                    aria-controls="mobileUserManagementMenu"
+                >
+                    <span>User Management</span>
+                    <span class="hms-nav-toggle-icon" aria-hidden="true">›</span>
+                </button>
+                <div class="collapse {{ $isUserManagementOpen ? 'show' : '' }}" id="mobileUserManagementMenu">
+                    <div class="ps-3 mt-1">
+                        <a class="hms-nav-link {{ request()->routeIs('user-management.permissions.*') ? 'active' : '' }}" href="{{ route('user-management.permissions.index') }}">Permissions</a>
+                        <a class="hms-nav-link {{ request()->routeIs('user-management.roles.*') ? 'active' : '' }}" href="{{ route('user-management.roles.index') }}">Roles</a>
+                        <a class="hms-nav-link {{ request()->routeIs('user-management.users.*') ? 'active' : '' }}" href="{{ route('user-management.users.index') }}">Users</a>
+                    </div>
+                </div>
             @endif
         </div>
     </div>

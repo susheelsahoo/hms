@@ -59,4 +59,15 @@ class User extends Authenticatable
     {
         return $this->role?->slug === Role::HOTEL_MANAGER;
     }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return $this->role?->permissions()
+            ->where('slug', $permission)
+            ->exists() === true;
+    }
 }
