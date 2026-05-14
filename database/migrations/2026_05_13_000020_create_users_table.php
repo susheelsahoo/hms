@@ -30,9 +30,9 @@ return new class extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
 
-            $table->index(['organization_id', 'role_id']);
-            $table->index(['organization_id', 'status', 'deleted_at']);
-            $table->index('last_login_at');
+            $table->index(['organization_id', 'role_id'], 'usr_org_role_idx');
+            $table->index(['organization_id', 'status', 'deleted_at'], 'usr_status_idx');
+            $table->index('last_login_at', 'usr_login_idx');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {

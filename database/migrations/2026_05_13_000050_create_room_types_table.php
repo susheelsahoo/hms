@@ -25,7 +25,7 @@ return new class extends Migration
             $table->softDeletesTz();
 
             $table->unique(['hotel_id', 'slug']);
-            $table->index(['organization_id', 'hotel_id', 'deleted_at']);
+            $table->index(['organization_id', 'hotel_id', 'deleted_at'], 'rtype_hotel_idx');
         });
     }
 

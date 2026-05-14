@@ -30,10 +30,10 @@ return new class extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
 
-            $table->index(['organization_id', 'hotel_id', 'deleted_at']);
-            $table->index(['hotel_id', 'email']);
-            $table->index(['hotel_id', 'phone']);
-            $table->index(['id_type', 'id_number']);
+            $table->index(['organization_id', 'hotel_id', 'deleted_at'], 'gst_hotel_idx');
+            $table->index(['hotel_id', 'email'], 'gst_email_idx');
+            $table->index(['hotel_id', 'phone'], 'gst_phone_idx');
+            $table->index(['id_type', 'id_number'], 'gst_id_idx');
         });
     }
 

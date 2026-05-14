@@ -21,9 +21,9 @@ return new class extends Migration
             $table->timestampTz('sent_at')->nullable();
             $table->timestampsTz();
 
-            $table->index(['organization_id', 'hotel_id', 'type']);
-            $table->index(['user_id', 'read_at']);
-            $table->index(['sent_at', 'created_at']);
+            $table->index(['organization_id', 'hotel_id', 'type'], 'notif_type_idx');
+            $table->index(['user_id', 'read_at'], 'notif_read_idx');
+            $table->index(['sent_at', 'created_at'], 'notif_sent_idx');
         });
     }
 

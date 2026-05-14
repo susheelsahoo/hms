@@ -21,10 +21,10 @@ return new class extends Migration
             $table->jsonb('payload')->default('{}');
             $table->timestampsTz();
 
-            $table->index(['organization_id', 'module', 'action']);
-            $table->index(['entity_type', 'entity_id']);
-            $table->index(['user_id', 'created_at']);
-            $table->index('created_at');
+            $table->index(['organization_id', 'module', 'action'], 'al_module_idx');
+            $table->index(['entity_type', 'entity_id'], 'al_entity_idx');
+            $table->index(['user_id', 'created_at'], 'al_user_idx');
+            $table->index('created_at', 'al_created_idx');
         });
     }
 

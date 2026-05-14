@@ -19,8 +19,8 @@ return new class extends Migration
             $table->timestampsTz();
 
             $table->unique(['booking_id', 'room_id']);
-            $table->index(['organization_id', 'booking_id']);
-            $table->index(['room_id', 'created_at']);
+            $table->index(['organization_id', 'booking_id'], 'br_booking_idx');
+            $table->index(['room_id', 'created_at'], 'br_room_idx');
         });
     }
 

@@ -35,8 +35,8 @@ return new class extends Migration
             $table->softDeletesTz();
 
             $table->unique(['organization_id', 'slug']);
-            $table->index(['organization_id', 'status', 'deleted_at']);
-            $table->index(['country', 'state', 'city']);
+            $table->index(['organization_id', 'status', 'deleted_at'], 'htl_status_idx');
+            $table->index(['country', 'state', 'city'], 'htl_location_idx');
         });
     }
 

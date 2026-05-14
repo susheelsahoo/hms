@@ -25,9 +25,9 @@ return new class extends Migration
             $table->softDeletesTz();
 
             $table->unique(['hotel_id', 'invoice_number']);
-            $table->index(['organization_id', 'hotel_id', 'status', 'deleted_at']);
-            $table->index(['booking_id', 'status']);
-            $table->index('due_date');
+            $table->index(['organization_id', 'hotel_id', 'status', 'deleted_at'], 'inv_status_idx');
+            $table->index(['booking_id', 'status'], 'inv_booking_idx');
+            $table->index('due_date', 'inv_due_idx');
         });
     }
 

@@ -27,8 +27,8 @@ return new class extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
 
-            $table->index(['status', 'deleted_at']);
-            $table->index(['country', 'state', 'city']);
+            $table->index(['status', 'deleted_at'], 'org_status_idx');
+            $table->index(['country', 'state', 'city'], 'org_location_idx');
         });
     }
 

@@ -25,10 +25,13 @@ return new class extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
 
-            $table->index(['organization_id', 'hotel_id', 'payment_status', 'deleted_at']);
-            $table->index(['booking_id', 'payment_status']);
-            $table->index(['payment_gateway', 'transaction_id']);
-            $table->index('paid_at');
+            $table->index(
+                ['organization_id', 'hotel_id', 'payment_status', 'deleted_at'],
+                'pay_status_idx'
+            );
+            $table->index(['booking_id', 'payment_status'], 'pay_booking_status_idx');
+            $table->index(['payment_gateway', 'transaction_id'], 'pay_gateway_txn_idx');
+            $table->index('paid_at', 'pay_paid_at_idx');
         });
     }
 

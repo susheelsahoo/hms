@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestampsTz();
 
             $table->unique(['user_id', 'hotel_id']);
-            $table->index(['organization_id', 'hotel_id', 'access_type']);
-            $table->index(['organization_id', 'user_id', 'is_primary']);
+            $table->index(['organization_id', 'hotel_id', 'access_type'], 'uh_access_idx');
+            $table->index(['organization_id', 'user_id', 'is_primary'], 'uh_primary_idx');
         });
     }
 
