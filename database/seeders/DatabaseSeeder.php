@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Modules\Role\Models\Role;
+use Modules\Subscription\Database\Seeders\SubscriptionPlanSeeder;
 use Modules\User\Models\User;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
+            SubscriptionPlanSeeder::class,
         ]);
 
         $roles = Role::query()
@@ -67,5 +69,10 @@ class DatabaseSeeder extends Seeder
                 ]
             );
         }
+
+        // Seed dummy data for development/testing
+        $this->call([
+            DummyDataSeeder::class,
+        ]);
     }
 }

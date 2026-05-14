@@ -2,10 +2,13 @@
 
 namespace Modules\Subscription\Database\Factories;
 
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Subscription\Models\Subscription;
-use Modules\Subscription\Enums\SubscriptionStatus;
+use Illuminate\Support\Carbon;
 use Modules\Subscription\Enums\BillingCycle;
+use Modules\Subscription\Enums\SubscriptionStatus;
+use Modules\Subscription\Models\Subscription;
+use Modules\Subscription\Models\SubscriptionPlan;
 
 class SubscriptionFactory extends Factory
 {
@@ -13,21 +16,21 @@ class SubscriptionFactory extends Factory
 
     public function definition(): array
     {
-        $startDate = $this->faker->dateTimeBetween('-30 days', 'now');
+        $startDate = Carbon::instance($this->faker->dateTimeBetween('-30 days', 'now'));
         $billingCycle = $this->faker->randomElement(BillingCycle::cases());
         $days = $billingCycle->daysInCycle();
 
         return [
-            'organization_id' => \App\Models\Organization::factory(),
-            'subscription_plan_id' => \Modules\Subscription\Models\SubscriptionPlan::factory(),
+            'organization_id' => Organization::factory(),
+            'subscription_plan_id' => SubscriptionPlan::factory(),
             'status' => SubscriptionStatus::ACTIVE,
             'billing_cycle' => $billingCycle->value,
             'starts_at' => $startDate,
-            'ends_at' => (new \DateTime($startDate))->modify("+{$days} days"),
+            'ends_at' => $startDate->copy()->addDays($days),
             'trial_ends_at' => null,
             'grace_ends_at' => null,
             'cancelled_at' => null,
-            'renewal_at' => (new \DateTime($startDate))->modify("+{$days} days"),
+            'renewal_at' => $startDate->copy()->addDays($days),
             'amount' => $this->faker->numberBetween(2999, 19999) / 100,
             'currency' => 'USD',
             'auto_renew' => true,

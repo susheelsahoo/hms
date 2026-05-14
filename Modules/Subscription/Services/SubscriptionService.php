@@ -2,28 +2,29 @@
 
 namespace Modules\Subscription\Services;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use Modules\Subscription\Repositories\SubscriptionRepository;
-use Modules\Subscription\Repositories\SubscriptionPlanRepository;
-use Modules\Subscription\Repositories\SubscriptionUsageRepository;
-use Modules\Subscription\Models\Subscription;
-use Modules\Subscription\Models\SubscriptionUsage;
-use Modules\Subscription\Models\SubscriptionHistory;
-use Modules\Subscription\Models\SubscriptionInvoice;
+use Illuminate\Support\Facades\DB;
 use Modules\Subscription\DTOs\CreateSubscriptionDTO;
 use Modules\Subscription\DTOs\UpgradeSubscriptionDTO;
-use Modules\Subscription\Enums\SubscriptionStatus;
-use Modules\Subscription\Enums\SubscriptionAction;
 use Modules\Subscription\Enums\BillingCycle;
+use Modules\Subscription\Enums\SubscriptionAction;
+use Modules\Subscription\Enums\SubscriptionStatus;
 use Modules\Subscription\Exceptions\SubscriptionException;
-use App\Models\Organization;
+use Modules\Subscription\Models\Subscription;
+use Modules\Subscription\Models\SubscriptionHistory;
+use Modules\Subscription\Models\SubscriptionUsage;
+use Modules\Subscription\Repositories\SubscriptionPlanRepository;
+use Modules\Subscription\Repositories\SubscriptionRepository;
+use Modules\Subscription\Repositories\SubscriptionUsageRepository;
 
 class SubscriptionService
 {
     private SubscriptionRepository $subscriptionRepo;
+
     private SubscriptionPlanRepository $planRepo;
+
     private SubscriptionUsageRepository $usageRepo;
+
     private InvoiceService $invoiceService;
 
     public function __construct(
@@ -50,7 +51,7 @@ class SubscriptionService
             }
 
             $plan = $this->planRepo->findById($dto->subscriptionPlanId);
-            if (!$plan) {
+            if (! $plan) {
                 throw SubscriptionException::planNotFound($dto->subscriptionPlanId);
             }
 
@@ -71,7 +72,7 @@ class SubscriptionService
                 'amount' => $amount,
                 'currency' => 'USD',
                 'auto_renew' => $dto->autoRenew,
-                'metadata' => $dto->metadata,
+                'metadata' => $dto->metadata ?? [],
             ]);
 
             // Create usage record
@@ -95,11 +96,11 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($dto, $userId) {
             $subscription = $this->subscriptionRepo->findById($dto->subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($dto->subscriptionId);
             }
 
-            if (!$subscription->canUpgrade()) {
+            if (! $subscription->canUpgrade()) {
                 throw SubscriptionException::invalidStatusTransition(
                     $subscription->status->value,
                     'upgrade'
@@ -107,7 +108,7 @@ class SubscriptionService
             }
 
             $newPlan = $this->planRepo->findById($dto->newPlanId);
-            if (!$newPlan) {
+            if (! $newPlan) {
                 throw SubscriptionException::planNotFound($dto->newPlanId);
             }
 
@@ -162,11 +163,11 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($dto, $userId) {
             $subscription = $this->subscriptionRepo->findById($dto->subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($dto->subscriptionId);
             }
 
-            if (!$subscription->canDowngrade()) {
+            if (! $subscription->canDowngrade()) {
                 throw SubscriptionException::invalidStatusTransition(
                     $subscription->status->value,
                     'downgrade'
@@ -174,7 +175,7 @@ class SubscriptionService
             }
 
             $newPlan = $this->planRepo->findById($dto->newPlanId);
-            if (!$newPlan) {
+            if (! $newPlan) {
                 throw SubscriptionException::planNotFound($dto->newPlanId);
             }
 
@@ -214,11 +215,11 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($subscriptionId, $reason, $userId) {
             $subscription = $this->subscriptionRepo->findById($subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($subscriptionId);
             }
 
-            if (!$subscription->canCancel()) {
+            if (! $subscription->canCancel()) {
                 throw SubscriptionException::invalidStatusTransition(
                     $subscription->status->value,
                     'cancel'
@@ -252,11 +253,11 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($subscriptionId) {
             $subscription = $this->subscriptionRepo->findById($subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($subscriptionId);
             }
 
-            if (!$subscription->isRenewable()) {
+            if (! $subscription->isRenewable()) {
                 throw new SubscriptionException('Subscription is not eligible for renewal.');
             }
 
@@ -283,7 +284,7 @@ class SubscriptionService
             $this->recordHistory(
                 subscription: $subscription,
                 action: SubscriptionAction::RENEWAL,
-                description: 'Subscription renewed for ' . $billingCycle->label()
+                description: 'Subscription renewed for '.$billingCycle->label()
             );
 
             $this->clearSubscriptionCache($subscription->organization_id);
@@ -299,7 +300,7 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($subscriptionId) {
             $subscription = $this->subscriptionRepo->findById($subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($subscriptionId);
             }
 
@@ -327,7 +328,7 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($subscriptionId, $reason) {
             $subscription = $this->subscriptionRepo->findById($subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($subscriptionId);
             }
 
@@ -355,11 +356,11 @@ class SubscriptionService
     {
         return DB::transaction(function () use ($subscriptionId) {
             $subscription = $this->subscriptionRepo->findById($subscriptionId);
-            if (!$subscription) {
+            if (! $subscription) {
                 throw SubscriptionException::subscriptionNotFound($subscriptionId);
             }
 
-            if (!$subscription->isCancelled()) {
+            if (! $subscription->isCancelled()) {
                 throw new SubscriptionException('Only cancelled subscriptions can be reactivated.');
             }
 
@@ -404,8 +405,8 @@ class SubscriptionService
     public function hasFeatureAccess(int $organizationId, string $feature): bool
     {
         $subscription = $this->getActiveSubscription($organizationId);
-        
-        if (!$subscription || !$subscription->isActive()) {
+
+        if (! $subscription || ! $subscription->isActive()) {
             return false;
         }
 
@@ -418,8 +419,8 @@ class SubscriptionService
     public function validateHotelLimit(int $organizationId, int $count = 1): bool
     {
         $subscription = $this->getActiveSubscription($organizationId);
-        
-        if (!$subscription || !$subscription->isActive()) {
+
+        if (! $subscription || ! $subscription->isActive()) {
             throw SubscriptionException::noActiveSubscription($organizationId);
         }
 
@@ -439,8 +440,8 @@ class SubscriptionService
     public function validateStaffLimit(int $organizationId, int $count = 1): bool
     {
         $subscription = $this->getActiveSubscription($organizationId);
-        
-        if (!$subscription || !$subscription->isActive()) {
+
+        if (! $subscription || ! $subscription->isActive()) {
             throw SubscriptionException::noActiveSubscription($organizationId);
         }
 
@@ -460,8 +461,8 @@ class SubscriptionService
     public function validateBookingLimit(int $organizationId, int $count = 1): bool
     {
         $subscription = $this->getActiveSubscription($organizationId);
-        
-        if (!$subscription || !$subscription->isActive()) {
+
+        if (! $subscription || ! $subscription->isActive()) {
             throw SubscriptionException::noActiveSubscription($organizationId);
         }
 

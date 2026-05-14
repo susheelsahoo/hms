@@ -25,6 +25,7 @@ return [
         'Notification',
         'Report',
         'Subscription',
+        'GlobalAnalytics',
         'Audit',
         'Shared',
     ],

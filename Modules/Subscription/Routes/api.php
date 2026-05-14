@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Subscription\Controllers\SubscriptionPlanController;
 use Modules\Subscription\Controllers\SubscriptionController;
 use Modules\Subscription\Controllers\SubscriptionInvoiceController;
+use Modules\Subscription\Controllers\SubscriptionPlanController;
 
-Route::prefix('api/v1')->middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
+Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     // Subscription Plans
     Route::prefix('subscription-plans')->group(function () {
         Route::get('/', [SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');

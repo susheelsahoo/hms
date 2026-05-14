@@ -3,8 +3,8 @@
 namespace Modules\Subscription\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Subscription\Models\SubscriptionPlan;
 use Modules\Subscription\Models\SubscriptionFeature;
+use Modules\Subscription\Models\SubscriptionPlan;
 
 class SubscriptionPlanSeeder extends Seeder
 {
@@ -70,8 +70,8 @@ class SubscriptionPlanSeeder extends Seeder
             'description' => 'For large-scale hotel operations',
             'price_monthly' => 199.99,
             'price_yearly' => 1999.90,
-            'hotel_limit' => 99999,
-            'staff_limit' => 99999,
+            'hotel_limit' => 30000,
+            'staff_limit' => 30000,
             'room_limit' => 99999,
             'booking_limit' => 99999,
             'storage_limit' => 1000,

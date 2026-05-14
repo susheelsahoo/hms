@@ -29,7 +29,7 @@ class SubscriptionPlanResource extends JsonResource
             'trial_days' => $this->trial_days,
             'is_active' => $this->is_active,
             'features' => $this->whenLoaded('features', function () {
-                return $this->features->map(fn ($f) => [
+                return $this->getRelation('features')->map(fn ($f) => [
                     'key' => $f->feature_key,
                     'name' => $f->feature_name,
                     'included' => $f->is_included,

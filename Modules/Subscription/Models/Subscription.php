@@ -5,6 +5,7 @@ namespace Modules\Subscription\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Organization\Models\Organization;
 use Modules\Subscription\Database\Factories\SubscriptionFactory;
 use Modules\Subscription\Enums\SubscriptionStatus;
 
@@ -61,7 +62,7 @@ class Subscription extends Model
     // Relationships
     public function organization()
     {
-        return $this->belongsTo(\App\Models\Organization::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function plan()
@@ -148,9 +149,10 @@ class Subscription extends Model
 
     public function isTrialActive(): bool
     {
-        if (!$this->isTrial()) {
+        if (! $this->isTrial()) {
             return false;
         }
+
         return $this->trial_ends_at?->isFuture() ?? false;
     }
 
@@ -161,17 +163,19 @@ class Subscription extends Model
 
     public function daysRemainingInTrial(): ?int
     {
-        if (!$this->isTrialActive()) {
+        if (! $this->isTrialActive()) {
             return null;
         }
+
         return now()->diffInDays($this->trial_ends_at, false);
     }
 
     public function daysUntilExpiration(): ?int
     {
-        if (!$this->isActive()) {
+        if (! $this->isActive()) {
             return null;
         }
+
         return now()->diffInDays($this->ends_at, false);
     }
 
@@ -182,17 +186,17 @@ class Subscription extends Model
 
     public function hasGracePeriod(): bool
     {
-        return !is_null($this->grace_ends_at) && $this->grace_ends_at->isFuture();
+        return ! is_null($this->grace_ends_at) && $this->grace_ends_at->isFuture();
     }
 
     public function canUpgrade(): bool
     {
-        return !$this->isCancelled();
+        return ! $this->isCancelled();
     }
 
     public function canDowngrade(): bool
     {
-        return !$this->isCancelled();
+        return ! $this->isCancelled();
     }
 
     public function canCancel(): bool

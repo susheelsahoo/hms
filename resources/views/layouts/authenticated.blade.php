@@ -3,6 +3,8 @@
 @section('body')
     @php
         $isUserManagementOpen = request()->routeIs('user-management.*');
+        $isSubscriptionsOpen = request()->routeIs('super-admin.subscription-plans.*');
+        $isGlobalAnalyticsOpen = request()->routeIs('super-admin.global-analytics.*');
     @endphp
 
     <div class="hms-shell">
@@ -47,8 +49,8 @@
                             </a>
                         </div>
                     </div>
-                    <a class="hms-nav-link disabled" href="#">Subscriptions</a>
-                    <a class="hms-nav-link disabled" href="#">Global Analytics</a>
+                    <a class="hms-nav-link {{ $isSubscriptionsOpen ? 'active' : '' }}" href="{{ route('super-admin.subscription-plans.index') }}">Subscriptions</a>
+                    <a class="hms-nav-link {{ $isGlobalAnalyticsOpen ? 'active' : '' }}" href="{{ route('super-admin.global-analytics.dashboard') }}">Global Analytics</a>
                 @endif
 
                 @if (auth()->user()->isHotelAdmin())
@@ -123,6 +125,8 @@
                         <a class="hms-nav-link {{ request()->routeIs('user-management.users.*') ? 'active' : '' }}" href="{{ route('user-management.users.index') }}">Users</a>
                     </div>
                 </div>
+                <a class="hms-nav-link {{ $isSubscriptionsOpen ? 'active' : '' }}" href="{{ route('super-admin.subscription-plans.index') }}">Subscriptions</a>
+                <a class="hms-nav-link {{ $isGlobalAnalyticsOpen ? 'active' : '' }}" href="{{ route('super-admin.global-analytics.dashboard') }}">Global Analytics</a>
             @endif
         </div>
     </div>

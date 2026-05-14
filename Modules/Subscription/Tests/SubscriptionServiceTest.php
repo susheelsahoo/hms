@@ -7,8 +7,8 @@ use Modules\Subscription\Models\SubscriptionPlan;
 use Modules\Subscription\Models\Subscription;
 use Modules\Subscription\Services\SubscriptionService;
 use Modules\Subscription\DTOs\CreateSubscriptionDTO;
-use App\Models\Organization;
 use App\Models\User;
+use App\Models\Organization;
 
 class SubscriptionServiceTest extends TestCase
 {
