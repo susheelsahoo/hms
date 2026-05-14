@@ -11,6 +11,6 @@
 
     <form method="POST" action="{{ route('super-admin.organizations.store') }}">
         @csrf
-        @include('organizations.partials.form', ['organization' => $organization])
+        @include('organization::organizations.partials.form', ['organization' => $organization])
     </form>
 @endsection

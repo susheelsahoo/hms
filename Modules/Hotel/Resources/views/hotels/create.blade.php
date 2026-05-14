@@ -11,6 +11,6 @@
 
     <form method="POST" action="{{ route('super-admin.organizations.hotels.store', $organization) }}">
         @csrf
-        @include('hotels.partials.form', ['organization' => $organization, 'hotel' => $hotel])
+        @include('hotel::hotels.partials.form', ['organization' => $organization, 'hotel' => $hotel])
     </form>
 @endsection

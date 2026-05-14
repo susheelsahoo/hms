@@ -12,7 +12,7 @@ class OrganizationController
 {
     public function index(): View
     {
-        return view('organizations.index', [
+        return view('organization::organizations.index', [
             'organizations' => Organization::query()
                 ->withCount(['hotels', 'users'])
                 ->latest()
@@ -22,7 +22,7 @@ class OrganizationController
 
     public function create(): View
     {
-        return view('organizations.create', [
+        return view('organization::organizations.create', [
             'organization' => new Organization([
                 'country' => 'US',
                 'timezone' => config('countries.US.timezone', 'UTC'),
@@ -43,7 +43,7 @@ class OrganizationController
 
     public function edit(Organization $organization): View
     {
-        return view('organizations.edit', [
+        return view('organization::organizations.edit', [
             'organization' => $organization,
         ]);
     }

@@ -13,7 +13,7 @@ class HotelController
 {
     public function index(Organization $organization): View
     {
-        return view('hotels.index', [
+        return view('hotel::hotels.index', [
             'organization' => $organization,
             'hotels' => $organization->hotels()->latest()->paginate(15),
         ]);
@@ -21,7 +21,7 @@ class HotelController
 
     public function create(Organization $organization): View
     {
-        return view('hotels.create', [
+        return view('hotel::hotels.create', [
             'organization' => $organization,
             'hotel' => new Hotel([
                 'country' => $organization->country ?: 'US',
@@ -47,7 +47,7 @@ class HotelController
     {
         $this->ensureHotelBelongsToOrganization($organization, $hotel);
 
-        return view('hotels.edit', [
+        return view('hotel::hotels.edit', [
             'organization' => $organization,
             'hotel' => $hotel,
         ]);

@@ -12,6 +12,6 @@
     <form method="POST" action="{{ route('super-admin.organizations.update', $organization) }}">
         @csrf
         @method('PUT')
-        @include('organizations.partials.form', ['organization' => $organization])
+        @include('organization::organizations.partials.form', ['organization' => $organization])
     </form>
 @endsection
