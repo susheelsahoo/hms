@@ -31,8 +31,14 @@ return new class extends Migration
             $table->softDeletesTz();
 
             $table->unique(['hotel_id', 'booking_number']);
-            $table->index(['organization_id', 'hotel_id', 'booking_status', 'deleted_at']);
-            $table->index(['hotel_id', 'check_in_date', 'check_out_date']);
+            $table->index(
+                ['organization_id', 'hotel_id', 'booking_status', 'deleted_at'],
+                'bookings_status_idx'
+            );
+            $table->index(
+                ['hotel_id', 'check_in_date', 'check_out_date'],
+                'booking_date_idx'
+            );
             $table->index(['hotel_id', 'payment_status']);
             $table->index(['guest_id', 'created_at']);
             $table->index('created_by');
