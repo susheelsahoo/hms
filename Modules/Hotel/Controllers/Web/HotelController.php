@@ -7,10 +7,15 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Modules\Hotel\Models\Hotel;
 use Modules\Hotel\Requests\HotelRequest;
+use Modules\Hotel\Services\HotelService;
 use Modules\Organization\Models\Organization;
 
 class HotelController
 {
+    public function __construct(
+        private HotelService $hotelService
+    ) {}
+
     public function index(Organization $organization): View
     {
         return view('hotel::hotels.index', [
@@ -76,6 +81,44 @@ class HotelController
     }
 
     /**
+     * List hotels for the current user (organization owner or hotel manager)
+     */
+    public function listUserHotels(): View
+    {
+        $user = auth()->user();
+        $hotels = $this->hotelService->getUserHotels($user);
+        $selectedHotelId = session('selected_hotel_id');
+        $selectedHotel = null;
+
+        if ($selectedHotelId) {
+            $selectedHotel = $hotels->firstWhere('id', $selectedHotelId);
+        }
+
+        return view('hotel::hotels.list-user-hotels', [
+            'hotels' => $hotels,
+            'selectedHotel' => $selectedHotel,
+        ]);
+    }
+
+    /**
+     * Select a hotel for the current user
+     */
+    public function selectHotel(Hotel $hotel): RedirectResponse
+    {
+        $user = auth()->user();
+
+        // Check if user can access this hotel
+        if (!$this->hotelService->canAccessHotel($user, $hotel)) {
+            abort(403, 'You do not have access to this hotel.');
+        }
+
+        // Store selected hotel in session
+        session(['selected_hotel_id' => $hotel->id, 'selected_hotel_name' => $hotel->name]);
+
+        return redirect()->route('dashboard')->with('status', 'Hotel switched to ' . $hotel->name);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function payload(HotelRequest $request): array
@@ -94,3 +137,4 @@ class HotelController
         abort_if($hotel->organization_id !== $organization->id, 404);
     }
 }
+

@@ -36,6 +36,7 @@ class OrganizationRequest extends FormRequest
             'country' => ['required', 'string', 'size:2', Rule::in(array_keys(config('countries', [])))],
             'zip_code' => ['nullable', 'string', 'max:20'],
             'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
+            'subscription_plan_id' => ['required', 'integer', Rule::exists('subscription_plans', 'id')->where('is_active', true)],
         ];
     }
 }

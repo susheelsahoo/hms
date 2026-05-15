@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->role?->slug === Role::SUPER_ADMIN;
     }
 
+    public function isOrganizationOwner(): bool
+    {
+        return $this->role?->slug === Role::ORGANIZATION_OWNER;
+    }
+
     public function isHotelAdmin(): bool
     {
         return $this->role?->slug === Role::HOTEL_ADMIN;

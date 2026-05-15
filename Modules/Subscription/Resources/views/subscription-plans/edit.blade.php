@@ -1,0 +1,24 @@
+@extends('layouts.authenticated')
+
+@section('title', 'Edit Subscription Plan | HMS')
+@section('page-title', 'Edit Subscription Plan')
+
+@section('content')
+    <div class="mb-4">
+        <a href="{{ route('super-admin.subscription-plans.index') }}" class="text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Back to Plans
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="h3 mb-4">Edit Subscription Plan: <span class="text-secondary">{{ $plan->name }}</span></h1>
+
+            <form method="POST" action="{{ route('super-admin.subscription-plans.update', $plan) }}">
+                @csrf
+                @method('PUT')
+                @include('subscription::subscription-plans.partials.form')
+            </form>
+        </div>
+    </div>
+@endsection

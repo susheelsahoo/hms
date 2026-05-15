@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Modules\Organization\Models\Organization;
 use Modules\Organization\Requests\OrganizationRequest;
+use Modules\Subscription\Models\SubscriptionPlan;
 
 class OrganizationController
 {
@@ -15,6 +16,7 @@ class OrganizationController
         return view('organization::organizations.index', [
             'organizations' => Organization::query()
                 ->withCount(['hotels', 'users'])
+                ->with(['subscriptionPlan', 'subscription'])
                 ->latest()
                 ->paginate(15),
         ]);
@@ -29,6 +31,9 @@ class OrganizationController
                 'currency' => config('countries.US.currency', 'USD'),
                 'status' => 'active',
             ]),
+            'subscriptionPlans' => SubscriptionPlan::where('is_active', true)
+                ->orderBy('price_monthly')
+                ->get(),
         ]);
     }
 
@@ -44,7 +49,10 @@ class OrganizationController
     public function edit(Organization $organization): View
     {
         return view('organization::organizations.edit', [
-            'organization' => $organization,
+            'organization' => $organization->load(['subscriptionPlan', 'subscription']),
+            'subscriptionPlans' => SubscriptionPlan::where('is_active', true)
+                ->orderBy('price_monthly')
+                ->get(),
         ]);
     }
 

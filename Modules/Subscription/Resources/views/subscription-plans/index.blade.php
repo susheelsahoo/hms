@@ -4,11 +4,14 @@
 @section('page-title', 'Subscription Plans')
 
 @section('content')
-    <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4 align-items-start">
         <div>
             <h1 class="h4 mb-1">Subscription Plans</h1>
             <p class="text-secondary mb-0">Activate, pause, and review SaaS plans available to organizations.</p>
         </div>
+        <a href="{{ route('super-admin.subscription-plans.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Create New Plan
+        </a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -56,14 +59,19 @@
                                 @endif
                             </td>
                             <td class="text-end">
-                                <form method="POST" action="{{ route('super-admin.subscription-plans.status.update', $plan) }}" class="d-inline">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="hidden" name="is_active" value="{{ $plan->is_active ? 0 : 1 }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-{{ $plan->is_active ? 'secondary' : 'success' }}">
-                                        {{ $plan->is_active ? 'Deactivate' : 'Activate' }}
-                                    </button>
-                                </form>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ route('super-admin.subscription-plans.edit', $plan) }}" class="btn btn-outline-primary" title="Edit Plan">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <form method="POST" action="{{ route('super-admin.subscription-plans.status.update', $plan) }}" class="d-inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="is_active" value="{{ $plan->is_active ? 0 : 1 }}">
+                                        <button type="submit" class="btn btn-outline-{{ $plan->is_active ? 'secondary' : 'success' }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
+                                            {{ $plan->is_active ? '✓ Active' : '○ Inactive' }}
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

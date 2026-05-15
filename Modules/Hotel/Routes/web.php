@@ -9,3 +9,9 @@ Route::middleware(['auth', 'role:super_admin'])->group(function (): void {
         ->names('super-admin.organizations.hotels')
         ->except(['show']);
 });
+
+// Organization Owner and Hotel Manager routes
+Route::middleware(['auth'])->group(function (): void {
+    Route::get('/hotels', [HotelController::class, 'listUserHotels'])->name('hotels.list');
+    Route::post('/hotels/{hotel}/select', [HotelController::class, 'selectHotel'])->name('hotels.select');
+});
