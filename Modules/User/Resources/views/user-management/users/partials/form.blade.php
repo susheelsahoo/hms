@@ -26,15 +26,6 @@
                 @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="role_id">Role</label>
-                <select id="role_id" name="role_id" class="form-select @error('role_id') is-invalid @enderror" required>
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->id }}" @selected((int) old('role_id', $user->role_id) === $role->id)>{{ $role->name }}</option>
-                    @endforeach
-                </select>
-                @error('role_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-            </div>
-            <div class="col-md-6">
                 <label class="form-label" for="organization_id">Organization</label>
                 <select id="organization_id" name="organization_id" class="form-select @error('organization_id') is-invalid @enderror">
                     <option value="">Platform / No Organization</option>
@@ -43,6 +34,33 @@
                     @endforeach
                 </select>
                 @error('organization_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+            @php
+                $selectedHotelValues = collect(old('hotel_ids', $selectedHotelIds ?? []))
+                    ->map(fn ($hotelId) => (string) $hotelId)
+                    ->all();
+            @endphp
+            <div class="col-md-6">
+                <label class="form-label" for="hotel_ids">Hotels</label>
+                <select
+                    id="hotel_ids"
+                    name="hotel_ids[]"
+                    class="form-select @error('hotel_ids') is-invalid @enderror @error('hotel_ids.*') is-invalid @enderror"
+                    multiple
+                    size="5"
+                ></select>
+                <div class="form-text">Select one or more hotels for this user.</div>
+                @error('hotel_ids') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                @error('hotel_ids.*') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="role_id">Role</label>
+                <select id="role_id" name="role_id" class="form-select @error('role_id') is-invalid @enderror" required>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}" @selected((int) old('role_id', $user->role_id) === $role->id)>{{ $role->name }}</option>
+                    @endforeach
+                </select>
+                @error('role_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="status">Status</label>
@@ -70,3 +88,43 @@
         <button type="submit" class="btn btn-primary">Save User</button>
     </div>
 </div>
+
+<script>
+    (() => {
+        const organizationSelect = document.getElementById('organization_id');
+        const hotelSelect = document.getElementById('hotel_ids');
+        const hotelsByOrganization = @json($hotelsByOrganization ?? []);
+        let selectedHotelIds = @json($selectedHotelValues);
+
+        const refreshHotels = () => {
+            const organizationId = organizationSelect.value;
+            const hotels = hotelsByOrganization[organizationId] || [];
+
+            hotelSelect.innerHTML = '';
+            hotelSelect.disabled = hotels.length === 0;
+
+            if (hotels.length === 0) {
+                const option = new Option(
+                    organizationId ? 'No hotels found for this organization' : 'Select organization first',
+                    ''
+                );
+                option.disabled = true;
+                hotelSelect.append(option);
+                return;
+            }
+
+            hotels.forEach((hotel) => {
+                const option = new Option(hotel.name, hotel.id);
+                option.selected = selectedHotelIds.includes(String(hotel.id));
+                hotelSelect.append(option);
+            });
+        };
+
+        organizationSelect.addEventListener('change', () => {
+            selectedHotelIds = [];
+            refreshHotels();
+        });
+
+        refreshHotels();
+    })();
+</script>

@@ -78,12 +78,12 @@
 
         <div class="hms-main">
             <nav class="navbar bg-white border-bottom px-3">
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3 flex-grow-1">
                     <button class="btn btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
                         Menu
                     </button>
                     <span class="navbar-brand mb-0 h1 ms-2">@yield('page-title', 'Dashboard')</span>
-                    
+
                     @php
                         $userHotels = [];
                         if ((auth()->user()->isOrganizationOwner() || auth()->user()->isHotelAdmin() || auth()->user()->isHotelManager()) && method_exists(\Modules\Hotel\Services\HotelService::class, 'getUserHotels')) {
@@ -124,7 +124,6 @@
                             </ul>
                         </div>
                     @endif
-                </div>
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <span class="text-secondary small d-none d-md-inline">{{ auth()->user()->email }}</span>

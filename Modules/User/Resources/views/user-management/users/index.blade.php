@@ -12,6 +12,27 @@
         <a href="{{ route('user-management.users.create') }}" class="btn btn-primary align-self-md-start">Create User</a>
     </div>
 
+    <form method="GET" action="{{ route('user-management.users.index') }}" class="row g-3 align-items-end mb-4">
+        <div class="col-12 col-md-5 col-lg-4">
+            <label class="form-label" for="organization_id">Organization</label>
+            <select class="form-select" id="organization_id" name="organization_id" onchange="this.form.submit()">
+                <option value="">All organizations</option>
+                <option value="platform" @selected($selectedOrganizationId === 'platform')>Platform / No Organization</option>
+                @foreach ($organizations as $organization)
+                    <option value="{{ $organization->id }}" @selected((string) $selectedOrganizationId === (string) $organization->id)>
+                        {{ $organization->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-12 col-md-auto">
+            <button type="submit" class="btn btn-outline-primary">Filter</button>
+            @if (filled($selectedOrganizationId))
+                <a href="{{ route('user-management.users.index') }}" class="btn btn-outline-secondary">Clear</a>
+            @endif
+        </div>
+    </form>
+
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
