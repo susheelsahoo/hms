@@ -19,6 +19,7 @@ class Permission extends Model
     // Room Management
     public const MANAGE_ROOMS = 'manage_rooms';
     public const MANAGE_ROOM_TYPES = 'manage_room_types';
+    public const MANAGE_RATE_TYPES = 'manage_rate_types';
 
     // Booking Management
     public const MANAGE_BOOKINGS = 'manage_bookings';

@@ -8,7 +8,7 @@ use Modules\Hotel\Models\Hotel;
 use Modules\Shared\Models\TenantModel;
 use Modules\Shared\Traits\BelongsToHotel;
 
-class RoomType extends TenantModel
+class RateType extends TenantModel
 {
     use BelongsToHotel;
 
@@ -26,13 +26,9 @@ class RoomType extends TenantModel
         return $this->belongsTo(Hotel::class);
     }
 
-    public function rateType(): BelongsTo
+    public function roomTypes(): HasMany
     {
-        return $this->belongsTo(RateType::class);
-    }
-
-    public function rooms(): HasMany
-    {
-        return $this->hasMany(Room::class);
+        return $this->hasMany(RoomType::class);
     }
 }
+

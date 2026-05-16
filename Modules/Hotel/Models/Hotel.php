@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Room\Models\Room;
+use Modules\Room\Models\RateType;
+use Modules\Room\Models\RoomType;
 use Modules\Organization\Models\Organization;
 use Modules\Shared\Models\TenantModel;
 use Modules\User\Models\User;
@@ -29,5 +31,15 @@ class Hotel extends TenantModel
     public function rooms(): HasMany
     {
         return $this->hasMany(Room::class);
+    }
+
+    public function roomTypes(): HasMany
+    {
+        return $this->hasMany(RoomType::class);
+    }
+
+    public function rateTypes(): HasMany
+    {
+        return $this->hasMany(RateType::class);
     }
 }

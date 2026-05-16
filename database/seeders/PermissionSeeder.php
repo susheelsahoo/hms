@@ -23,6 +23,7 @@ class PermissionSeeder extends Seeder
         // Room Management
         Permission::MANAGE_ROOMS => 'Manage rooms',
         Permission::MANAGE_ROOM_TYPES => 'Manage room types',
+        Permission::MANAGE_RATE_TYPES => 'Manage rate types',
 
         // Booking Management
         Permission::MANAGE_BOOKINGS => 'Manage bookings',
@@ -77,6 +78,7 @@ class PermissionSeeder extends Seeder
             Permission::VIEW_HOTEL_DETAILS,
             Permission::MANAGE_ROOMS,
             Permission::MANAGE_ROOM_TYPES,
+            Permission::MANAGE_RATE_TYPES,
             Permission::MANAGE_BOOKINGS,
             Permission::VIEW_BOOKING_DETAILS,
             Permission::CANCEL_BOOKINGS,
@@ -106,6 +108,7 @@ class PermissionSeeder extends Seeder
             Permission::VIEW_HOTEL_DETAILS,
             Permission::MANAGE_ROOMS,
             Permission::MANAGE_ROOM_TYPES,
+            Permission::MANAGE_RATE_TYPES,
             Permission::MANAGE_BOOKINGS,
             Permission::VIEW_BOOKING_DETAILS,
             Permission::CANCEL_BOOKINGS,
@@ -132,6 +135,7 @@ class PermissionSeeder extends Seeder
             Permission::VIEW_HOTEL_DETAILS,
             Permission::MANAGE_ROOMS,
             Permission::MANAGE_ROOM_TYPES,
+            Permission::MANAGE_RATE_TYPES,
             Permission::MANAGE_BOOKINGS,
             Permission::VIEW_BOOKING_DETAILS,
             Permission::CANCEL_BOOKINGS,
@@ -153,6 +157,8 @@ class PermissionSeeder extends Seeder
             // Hotel manager - operational permissions
             Permission::VIEW_HOTEL_DETAILS,
             Permission::MANAGE_ROOMS,
+            Permission::MANAGE_ROOM_TYPES,
+            Permission::MANAGE_RATE_TYPES,
             Permission::MANAGE_BOOKINGS,
             Permission::VIEW_BOOKING_DETAILS,
             Permission::CANCEL_BOOKINGS,

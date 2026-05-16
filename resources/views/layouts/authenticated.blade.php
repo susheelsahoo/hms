@@ -5,6 +5,7 @@
         $isUserManagementOpen = request()->routeIs('user-management.*');
         $isSubscriptionsOpen = request()->routeIs('super-admin.subscription-plans.*');
         $isGlobalAnalyticsOpen = request()->routeIs('super-admin.global-analytics.*');
+        $isRoomManagementOpen = request()->routeIs('room-management.*');
     @endphp
 
     <div class="hms-shell">
@@ -53,12 +54,44 @@
                     <a class="hms-nav-link {{ $isGlobalAnalyticsOpen ? 'active' : '' }}" href="{{ route('super-admin.global-analytics.dashboard') }}">Global Analytics</a>
                 @endif
 
-                @if (auth()->user()->isHotelAdmin())
-                    <div class="text-uppercase small text-white-50 mt-4 mb-2">Hotel Admin</div>
+                @if (auth()->user()->isOrganizationOwner() || auth()->user()->isHotelAdmin())
+                    <div class="text-uppercase small text-white-50 mt-4 mb-2">{{ auth()->user()->isOrganizationOwner() ? 'Organization Owner' : 'Hotel Admin' }}</div>
                     <a class="hms-nav-link {{ request()->routeIs('hotels.list') ? 'active' : '' }}" href="{{ route('hotels.list') }}">
                         <i class="bi bi-building"></i> My Hotels
                     </a>
-                    <a class="hms-nav-link disabled" href="#">Rooms</a>
+                    <button
+                        class="hms-nav-link hms-nav-toggle w-100 text-start {{ $isRoomManagementOpen ? 'active' : '' }}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#roomManagementMenu"
+                        aria-expanded="{{ $isRoomManagementOpen ? 'true' : 'false' }}"
+                        aria-controls="roomManagementMenu"
+                    >
+                        <span>Room Management</span>
+                        <span class="hms-nav-toggle-icon" aria-hidden="true">›</span>
+                    </button>
+                    <div class="collapse {{ $isRoomManagementOpen ? 'show' : '' }}" id="roomManagementMenu">
+                        <div class="ps-3 mt-1">
+                            @if (auth()->user()->hasPermission(\Modules\User\Models\Permission::MANAGE_ROOM_TYPES))
+                                <a class="hms-nav-link {{ request()->routeIs('room-management.room-types.*') ? 'active' : '' }}" href="{{ route('room-management.room-types.index') }}">
+                                    Room Types
+                                </a>
+                            @endif
+                            @if (auth()->user()->hasPermission(\Modules\User\Models\Permission::MANAGE_RATE_TYPES))
+                                <a class="hms-nav-link {{ request()->routeIs('room-management.rate-types.*') ? 'active' : '' }}" href="{{ route('room-management.rate-types.index') }}">
+                                    Rate Types
+                                </a>
+                            @endif
+                            @if (auth()->user()->hasPermission(\Modules\User\Models\Permission::MANAGE_ROOMS))
+                                <a class="hms-nav-link {{ request()->routeIs('room-management.rooms.*') ? 'active' : '' }}" href="{{ route('room-management.rooms.index') }}">
+                                    Rooms
+                                </a>
+                                <a class="hms-nav-link {{ request()->routeIs('room-management.room-statuses.*') ? 'active' : '' }}" href="{{ route('room-management.room-statuses.index') }}">
+                                    Room Statuses
+                                </a>
+                            @endif
+                        </div>
+                    </div>
                     <a class="hms-nav-link disabled" href="#">Staff</a>
                     <a class="hms-nav-link disabled" href="#">Reports</a>
                 @endif
@@ -68,6 +101,27 @@
                     <a class="hms-nav-link {{ request()->routeIs('hotels.list') ? 'active' : '' }}" href="{{ route('hotels.list') }}">
                         <i class="bi bi-building"></i> My Hotels
                     </a>
+                    <button
+                        class="hms-nav-link hms-nav-toggle w-100 text-start {{ $isRoomManagementOpen ? 'active' : '' }}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#managerRoomManagementMenu"
+                        aria-expanded="{{ $isRoomManagementOpen ? 'true' : 'false' }}"
+                        aria-controls="managerRoomManagementMenu"
+                    >
+                        <span>Room Management</span>
+                        <span class="hms-nav-toggle-icon" aria-hidden="true">›</span>
+                    </button>
+                    <div class="collapse {{ $isRoomManagementOpen ? 'show' : '' }}" id="managerRoomManagementMenu">
+                        <div class="ps-3 mt-1">
+                            <a class="hms-nav-link {{ request()->routeIs('room-management.rooms.*') ? 'active' : '' }}" href="{{ route('room-management.rooms.index') }}">
+                                Rooms
+                            </a>
+                            <a class="hms-nav-link {{ request()->routeIs('room-management.room-statuses.*') ? 'active' : '' }}" href="{{ route('room-management.room-statuses.index') }}">
+                                Room Statuses
+                            </a>
+                        </div>
+                    </div>
                     <a class="hms-nav-link disabled" href="#">Bookings</a>
                     <a class="hms-nav-link disabled" href="#">Check-in</a>
                     <a class="hms-nav-link disabled" href="#">Guests</a>
@@ -173,6 +227,34 @@
                 </div>
                 <a class="hms-nav-link {{ $isSubscriptionsOpen ? 'active' : '' }}" href="{{ route('super-admin.subscription-plans.index') }}">Subscriptions</a>
                 <a class="hms-nav-link {{ $isGlobalAnalyticsOpen ? 'active' : '' }}" href="{{ route('super-admin.global-analytics.dashboard') }}">Global Analytics</a>
+            @endif
+            @if (auth()->user()->isOrganizationOwner() || auth()->user()->isHotelAdmin() || auth()->user()->isHotelManager())
+                <a class="hms-nav-link {{ request()->routeIs('hotels.list') ? 'active' : '' }}" href="{{ route('hotels.list') }}">My Hotels</a>
+                <button
+                    class="hms-nav-link hms-nav-toggle w-100 text-start mt-2 {{ $isRoomManagementOpen ? 'active' : '' }}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mobileRoomManagementMenu"
+                    aria-expanded="{{ $isRoomManagementOpen ? 'true' : 'false' }}"
+                    aria-controls="mobileRoomManagementMenu"
+                >
+                    <span>Room Management</span>
+                    <span class="hms-nav-toggle-icon" aria-hidden="true">›</span>
+                </button>
+                <div class="collapse {{ $isRoomManagementOpen ? 'show' : '' }}" id="mobileRoomManagementMenu">
+                    <div class="ps-3 mt-1">
+                        @if (auth()->user()->hasPermission(\Modules\User\Models\Permission::MANAGE_ROOM_TYPES))
+                            <a class="hms-nav-link {{ request()->routeIs('room-management.room-types.*') ? 'active' : '' }}" href="{{ route('room-management.room-types.index') }}">Room Types</a>
+                        @endif
+                        @if (auth()->user()->hasPermission(\Modules\User\Models\Permission::MANAGE_RATE_TYPES))
+                            <a class="hms-nav-link {{ request()->routeIs('room-management.rate-types.*') ? 'active' : '' }}" href="{{ route('room-management.rate-types.index') }}">Rate Types</a>
+                        @endif
+                        @if (auth()->user()->hasPermission(\Modules\User\Models\Permission::MANAGE_ROOMS))
+                            <a class="hms-nav-link {{ request()->routeIs('room-management.rooms.*') ? 'active' : '' }}" href="{{ route('room-management.rooms.index') }}">Rooms</a>
+                            <a class="hms-nav-link {{ request()->routeIs('room-management.room-statuses.*') ? 'active' : '' }}" href="{{ route('room-management.room-statuses.index') }}">Room Statuses</a>
+                        @endif
+                    </div>
+                </div>
             @endif
         </div>
     </div>
